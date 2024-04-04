@@ -7,6 +7,7 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     private Rigidbody2D enemyRB;
+    public bool IsBig;
     private GameObject player;
 
     [SerializeField] private float movementSpeed = 3;
@@ -31,7 +32,12 @@ public class EnemyController : MonoBehaviour
     private void FixedUpdate()
     {
         DetectPlayer();
-        Escape();
+        if(IsBig){
+            Escape();
+        }else{
+            Follow();
+        }
+        
 
         // If the enemy doesn't have line of sight, it will reduce the timeScaping
         if (!hasLineOfSight && timeScaping >= 0.0f)
@@ -76,6 +82,18 @@ public class EnemyController : MonoBehaviour
         if (hasLineOfSight || timeScaping >= 0.0f)
         {
             enemyRB.velocity = (transform.position - player.transform.position).normalized * movementSpeed;
+        }
+        else
+        {
+            enemyRB.velocity = Vector2.zero;
+        }
+    }
+    private void Follow()
+    {
+        // If has line of sight or has time to be following, the enemy will follow the player
+        if (hasLineOfSight || timeScaping >= 0.0f)
+        {
+            enemyRB.velocity = (player.transform.position - transform.position).normalized * movementSpeed;
         }
         else
         {
