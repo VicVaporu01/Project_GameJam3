@@ -5,6 +5,8 @@ using UnityEngine;
 public class Move : MonoBehaviour
 {
     public float speed = 5.0f; // Velocidad de movimiento
+     public int health = 100;
+
 
     public bool hasPowerup;
 
@@ -23,6 +25,18 @@ public class Move : MonoBehaviour
         Vector2 movement = new Vector2(moveHorizontal, moveVertical); // Crea un vector de movimiento
 
         GetComponent<Rigidbody2D>().velocity = movement * speed; // Aplica el movimiento al Rigidbody2D del jugador
+        if (health <= 0) // Si la salud es 0 o menos
+        {
+            Destroy(gameObject); // Destruye el objeto del jugador
+        }
+    
+
+    
+    }
+    // Función para recibir daño
+    public void TakeDamage(int damage)
+    {
+        health -= damage; // Reduce la salud del jugador
     }
 
     private void OnTriggerEnter2D(Collider2D other) //colisiona con el powerup y lo desaparece
