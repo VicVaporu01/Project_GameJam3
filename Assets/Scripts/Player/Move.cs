@@ -6,6 +6,8 @@ public class Move : MonoBehaviour
 {
     public float speed = 5.0f; // Velocidad de movimiento
 
+    public bool hasPowerup;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,5 +23,14 @@ public class Move : MonoBehaviour
         Vector2 movement = new Vector2(moveHorizontal, moveVertical); // Crea un vector de movimiento
 
         GetComponent<Rigidbody2D>().velocity = movement * speed; // Aplica el movimiento al Rigidbody2D del jugador
+    }
+
+    private void OnTriggerEnter2D(Collider2D other) //colisiona con el powerup y lo desaparece
+    {
+        if (other.gameObject.CompareTag("powerup"))
+        {
+            hasPowerup = true;
+            Destroy(other.gameObject);
+        }
     }
 }
