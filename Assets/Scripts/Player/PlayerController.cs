@@ -4,16 +4,17 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
     public float speed = 5.0f; // Velocidad de movimiento
     public int health = 10;
     private float damage;
     private Rigidbody2D playerRB;
 
+    public bool hasPowerup;
+
     // Start is called before the first frame update
     void Start()
     {
-        playerRB = GetComponent<Rigidbody2D>();
+        playerRb = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -37,17 +38,20 @@ public class PlayerController : MonoBehaviour
         health -= damage; // Reduce la salud del jugador
     }
 
-    public float GetDamage()
+    private void OnTriggerEnter2D(Collider2D other) // El jugador colisiona con el powerup y lo desaparece
     {
-
-        return damage;
-    }
-
-    private void OnCollisionEnter2D(Collision2D other) {
-        if (other.gameObject.CompareTag("Enemy")) //
+        if (other.gameObject.CompareTag("powerup"))
         {
-            TakeDamage(1); // 
+            hasPowerup = true;
+            speed = speed * GiveExtraSpeed();
+            
+            Destroy(other.gameObject);
         }
     }
 
+    private float GiveExtraSpeed()
+    {
+        float extraSpeed = 2.0f;
+        return extraSpeed;
+    }
 }
