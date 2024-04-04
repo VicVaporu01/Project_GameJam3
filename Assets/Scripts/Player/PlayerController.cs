@@ -4,11 +4,16 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
+    private Rigidbody2D playerRb; 
     public float speed = 5.0f; // Velocidad de movimiento
-    public int health = 10;
+     public int health = 100;
+    public float velocity;
+
+
     private float damage;
     private Rigidbody2D playerRB;
+
+    public bool hasPowerup;
 
     // Start is called before the first frame update
     void Start()
@@ -29,6 +34,9 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(gameObject); // Destruye el objeto del jugador
         }
+
+        velocity = playerRb.velocity.magnitude;
+        
     }
 
     // Función para recibir daño
@@ -37,17 +45,29 @@ public class PlayerController : MonoBehaviour
         health -= damage; // Reduce la salud del jugador
     }
 
-    public float GetDamage()
+   public float GetDamage()
     {
 
         return damage;
     }
-
-    private void OnCollisionEnter2D(Collision2D other) {
+    private void OnTriggerEnter2D(Collider2D other) // El jugador colisiona con el powerup y lo desaparece
+    {
+        if (other.gameObject.CompareTag("powerup"))
+        {
+            hasPowerup = true;
+            speed = speed * GiveExtraSpeed();
+            
+            Destroy(other.gameObject);
+        }
         if (other.gameObject.CompareTag("Enemy")) //
         {
             TakeDamage(1); // 
         }
     }
 
+    private float GiveExtraSpeed()
+    {
+        float extraSpeed = 2.0f;
+        return extraSpeed;
+    }
 }
