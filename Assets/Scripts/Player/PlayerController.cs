@@ -2,16 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Move : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
-    public float speed = 5.0f; // Velocidad de movimiento
-     public int health = 100;
 
+    public float speed = 5.0f; // Velocidad de movimiento
+    public int health = 100;
+    private float damage;
 
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
@@ -27,13 +27,17 @@ public class Move : MonoBehaviour
         {
             Destroy(gameObject); // Destruye el objeto del jugador
         }
-    
-
-    
     }
+
     // Función para recibir daño
     public void TakeDamage(int damage)
     {
         health -= damage; // Reduce la salud del jugador
     }
+
+    public float GetDamage()
+    {
+        return damage;
+    }
+
 }
