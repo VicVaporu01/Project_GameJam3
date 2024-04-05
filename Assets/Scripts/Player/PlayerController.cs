@@ -48,6 +48,10 @@ public class PlayerController : MonoBehaviour
             Destroy(other.gameObject);
             StartCoroutine(PowerupTimer());
         }
+        if (other.gameObject.CompareTag("Enemy")) //
+        {
+            TakeDamage(1); // 
+        }
     }
     private float GiveExtraSpeed()
     {
