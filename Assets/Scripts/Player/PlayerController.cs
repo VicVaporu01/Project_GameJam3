@@ -10,13 +10,19 @@ public class PlayerController : MonoBehaviour
     private float damage;
     private Rigidbody2D playerRB;
     public Slider Vida;
-
+    public Slider Comida;
+    public int objectsAbsorbed = 0; // Número de objetos absorbidos
     public bool hasPowerup;
+    private Vector3 targetScale;
+    public float growthSpeed = 2f; 
 
     // Start is called before the first frame update
     void Start()
     {
         playerRB = GetComponent<Rigidbody2D>();
+        Vida.maxValue=health;
+        Vida.value=Vida.maxValue;
+        targetScale = transform.localScale;
     }
 
     // Update is called once per frame
@@ -31,6 +37,10 @@ public class PlayerController : MonoBehaviour
         if (health <= 0) // Si la salud es 0 o menos
         {
             Destroy(gameObject); // Destruye el objeto del jugador
+        }
+        if (transform.localScale != targetScale)
+        {
+            transform.localScale = Vector3.Lerp(transform.localScale, targetScale, growthSpeed * Time.deltaTime);
         }
     }
 
@@ -54,6 +64,14 @@ public class PlayerController : MonoBehaviour
         {
             TakeDamage(1); // 
         }
+        if (other.CompareTag("ObjectToAbsorb"))
+        {
+            // Absorber el objeto colisionado
+            AbsorbObject();
+
+            // Destruir el objeto colisionado
+            Destroy(other.gameObject);
+        }
     }
     private float GiveExtraSpeed()
     {
@@ -67,4 +85,16 @@ public class PlayerController : MonoBehaviour
         hasPowerup = false;
         speed = speed / GiveExtraSpeed();
     }
+    public void AbsorbObject()
+    {
+        objectsAbsorbed++; // Aumenta el contador de objetos absorbidos
+        Comida.value=objectsAbsorbed;
+        if (objectsAbsorbed % 3 == 0 && objectsAbsorbed > 0)
+        {
+            // Aumentar la escala de destino del objeto
+            targetScale *= 2f;
+            Comida.value=0;
+        }
+    }
+    
 }
