@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public int health = 10;
     private float damage;
     private Rigidbody2D playerRB;
+    public Slider Vida;
 
     public bool hasPowerup;
 
@@ -36,6 +38,7 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(int damage)
     {
         health -= damage; // Reduce la salud del jugador
+        Vida.value=health;
     }
 
     private void OnTriggerEnter2D(Collider2D other) // El jugador colisiona con el powerup y lo desaparece
