@@ -12,6 +12,7 @@ public class EnemyController : MonoBehaviour
 
     [SerializeField] private float movementSpeed = 3;
 
+    private float health = 5.0f;
     private bool hasLineOfSight = false;
     [SerializeField] private float timeScared = 3.0f, timeScaping = 0;
 
@@ -43,6 +44,14 @@ public class EnemyController : MonoBehaviour
         if (!hasLineOfSight && timeScaping >= 0.0f)
         {
             timeScaping -= Time.deltaTime;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            // TakeDamage(other.gameObject.GetComponents<PlayerController>().);
         }
     }
 
@@ -99,5 +108,9 @@ public class EnemyController : MonoBehaviour
         {
             enemyRB.velocity = Vector2.zero;
         }
+
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
     }
 }
