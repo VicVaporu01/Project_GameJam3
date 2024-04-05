@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     public bool hasPowerup;
     private Vector3 targetScale;
     public float growthSpeed = 2f;
-    private int MaxAbsorb = 3;
+    public int MaxAbsorb = 3;
     private GameObject enemy;
 
 
@@ -117,10 +117,12 @@ public class PlayerController : MonoBehaviour
     {
         objectsAbsorbed++; // Aumenta el contador de objetos absorbidos
         Comida.value = objectsAbsorbed; //aumenta la barra 
-        if (objectsAbsorbed % MaxAbsorb == 0 && objectsAbsorbed > 0) //verifica si ya se comio el maximo
+        if (objectsAbsorbed == MaxAbsorb  && objectsAbsorbed > 0) //verifica si ya se comio el maximo
         {
             // Aumentar la escala de destino del objeto
             MaxAbsorb++; // aumenta la cantidad de comida necesaria para volver a crecer
+            Comida.maxValue = MaxAbsorb;
+            objectsAbsorbed=0;
             targetScale *= 2f;
             Comida.value = 0;
             EnemyController
