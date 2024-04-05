@@ -6,7 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     public float speed = 5.0f; // Velocidad de movimiento
     public int health = 10;
-    private float damage;
+    private float damage = 3.0f;
     private Rigidbody2D playerRB;
 
     public bool hasPowerup;
@@ -45,14 +45,11 @@ public class PlayerController : MonoBehaviour
         {
             hasPowerup = true;
             speed = speed * GiveExtraSpeed();
-            Destroy(other.gameObject);
+            other.gameObject.SetActive(false);
             StartCoroutine(PowerupTimer());
         }
-        if (other.gameObject.CompareTag("Enemy")) //
-        {
-            TakeDamage(1); // 
-        }
     }
+
     private float GiveExtraSpeed()
     {
         float extraSpeed = 2.0f;
@@ -65,19 +62,17 @@ public class PlayerController : MonoBehaviour
         hasPowerup = false;
         speed = speed / GiveExtraSpeed();
     }
-}
+
     public float GetDamage()
     {
-
         return damage;
     }
 
-    private void OnCollisionEnter2D(Collision2D other) {
-        if (other.gameObject.CompareTag("Enemy")) //
-        {
-            TakeDamage(1); // 
-        }
-    }
-
+    // private void OnCollisionEnter2D(Collision2D other)
+    // {
+    //     if (other.gameObject.CompareTag("Enemy")) //
+    //     {
+    //         TakeDamage(1); // 
+    //     }
+    // }
 }
-
