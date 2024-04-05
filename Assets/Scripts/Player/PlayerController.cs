@@ -44,14 +44,20 @@ public class PlayerController : MonoBehaviour
         {
             hasPowerup = true;
             speed = speed * GiveExtraSpeed();
-            
             Destroy(other.gameObject);
+            StartCoroutine(PowerupTimer());
         }
     }
-
     private float GiveExtraSpeed()
     {
         float extraSpeed = 2.0f;
         return extraSpeed;
+    }
+
+    IEnumerator PowerupTimer()
+    {
+        yield return new WaitForSeconds(3);
+        hasPowerup = false;
+        speed = speed / GiveExtraSpeed();
     }
 }
