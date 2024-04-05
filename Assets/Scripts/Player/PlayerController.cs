@@ -7,6 +7,12 @@ public class PlayerController : MonoBehaviour
 {
     public float speed = 5.0f; // Velocidad de movimiento
     public int health = 10;
+
+    public AudioClip soundPowerup;
+    public AudioClip soundCollision;
+    public AudioClip SoundGrow;
+
+    private AudioSource playerSounds;
     private float damage;
     private Rigidbody2D playerRB;
     public Slider Vida;
@@ -19,6 +25,7 @@ public class PlayerController : MonoBehaviour
     private GameObject enemy; 
     
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -30,6 +37,8 @@ public class PlayerController : MonoBehaviour
         Comida.value=0;
         Vida.value=Vida.maxValue;
         targetScale = transform.localScale;
+        playerSounds = GetComponent<AudioSource>();
+        
     }
 
     // Update is called once per frame
@@ -66,6 +75,7 @@ public class PlayerController : MonoBehaviour
             speed = speed * GiveExtraSpeed();
             Destroy(other.gameObject);
             StartCoroutine(PowerupTimer());
+            playerSounds.PlayOneShot(soundPowerup, 1.0f);
         }
         if (other.gameObject.CompareTag("Enemy")) //
         {
@@ -107,4 +117,19 @@ public class PlayerController : MonoBehaviour
         }
     }
     
+
+    public float GetDamage()
+    {
+
+        return damage;
+    }
+
+    private void OnCollisionEnter2D(Collision2D other) {
+        if (other.gameObject.CompareTag("Enemy")) //
+        {
+            TakeDamage(1); // 
+        }
+    }
+
 }
+
