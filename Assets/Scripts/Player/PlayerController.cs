@@ -114,10 +114,8 @@ public class PlayerController : MonoBehaviour
             MaxAbsorb++; // aumenta la cantidad de comida necesaria para volver a crecer
             targetScale *= 2f;
             Comida.value = 0;
-            EnemyController
-                script = enemy
-                    .GetComponent<EnemyController>(); //puede que esto se pueda de hacer de otra forma mas optima 
-            script.isBig = true;
+            // EnemyController script = enemy.GetComponent<EnemyController>();
+            // script.isBig = true;
         }
     }
 }

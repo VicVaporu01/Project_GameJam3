@@ -116,6 +116,11 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    private void randomMovement()
+    {
+        
+    }
+
     private void Escape()
     {
         // If has line of sight or has time to be scaping, the enemy will scape from the player
