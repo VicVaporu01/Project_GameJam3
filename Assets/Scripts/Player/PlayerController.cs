@@ -15,12 +15,19 @@ public class PlayerController : MonoBehaviour
     public bool hasPowerup;
     private Vector3 targetScale;
     public float growthSpeed = 2f; 
+    private int MaxAbsorb=3;
+    private GameObject enemy; 
+    
 
     // Start is called before the first frame update
     void Start()
     {
+        enemy = GameObject.FindWithTag("Enemy");
         playerRB = GetComponent<Rigidbody2D>();
+        
         Vida.maxValue=health;
+        Comida.maxValue=MaxAbsorb;
+        Comida.value=0;
         Vida.value=Vida.maxValue;
         targetScale = transform.localScale;
     }
@@ -89,11 +96,14 @@ public class PlayerController : MonoBehaviour
     {
         objectsAbsorbed++; // Aumenta el contador de objetos absorbidos
         Comida.value=objectsAbsorbed;
-        if (objectsAbsorbed % 3 == 0 && objectsAbsorbed > 0)
+        if (objectsAbsorbed % MaxAbsorb == 0 && objectsAbsorbed > 0)
         {
             // Aumentar la escala de destino del objeto
+            MaxAbsorb++;
             targetScale *= 2f;
             Comida.value=0;
+            EnemyController script = enemy.GetComponent<EnemyController>();
+            script.IsBig = true;
         }
     }
     
