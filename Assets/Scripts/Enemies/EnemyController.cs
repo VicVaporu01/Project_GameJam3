@@ -108,6 +108,7 @@ public class EnemyController : MonoBehaviour
         {
             enemyRB.velocity = Vector2.zero;
         }
+    }
 
     public void TakeDamage(float damage)
     {
