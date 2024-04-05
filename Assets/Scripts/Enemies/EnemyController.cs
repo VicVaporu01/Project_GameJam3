@@ -7,14 +7,18 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     private Rigidbody2D enemyRB;
-    public bool IsBig;
+    public bool isBig;
     private GameObject player;
 
     [SerializeField] private float movementSpeed = 3;
 
-    private float health = 5.0f;
-    private bool hasLineOfSight = false;
+    [SerializeField] private float health = 5.0f;
+    [SerializeField] private bool hasLineOfSight = false;
     [SerializeField] private float timeScared = 3.0f, timeScaping = 0;
+    
+    private bool isPushed = false;
+    private float pushDelay = 0.5f;
+    private float pushTimer = 0f;
 
     private void Start()
     {
@@ -28,17 +32,42 @@ public class EnemyController : MonoBehaviour
         {
             timeScaping -= Time.deltaTime;
         }
+
+        if (health <= 0)
+        {
+            DesactivateEnemy();
+        }
+        
+        if (isPushed)
+        {
+            pushTimer += Time.deltaTime;
+            if (pushTimer >= pushDelay)
+            {
+                isPushed = false;
+                pushTimer = 0f;
+            }
+        }
+    }
+
+    private void OnEnable()
+    {
+        health = 5.0f;
     }
 
     private void FixedUpdate()
     {
         DetectPlayer();
-        if(IsBig){
-            Escape();
-        }else{
-            Follow();
+        if (!isPushed)
+        {
+            if (isBig)
+            {
+                Escape();
+            }
+            else
+            {
+                Follow();
+            }
         }
-        
 
         // If the enemy doesn't have line of sight, it will reduce the timeScaping
         if (!hasLineOfSight && timeScaping >= 0.0f)
@@ -51,7 +80,9 @@ public class EnemyController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            // TakeDamage(other.gameObject.GetComponents<PlayerController>().);
+            TakeDamage(other.gameObject.GetComponent<PlayerController>().GetDamage());
+            enemyRB.AddForce((transform.position - other.transform.position) * 2.0f, ForceMode2D.Impulse);
+            isPushed = true;
         }
     }
 
@@ -61,12 +92,12 @@ public class EnemyController : MonoBehaviour
         Vector3 direction = (player.transform.position - transform.position).normalized;
 
         // To see the raycast in the scene view
-        Ray2D rayToSee = new Ray2D(transform.position + direction * 0.6f, direction);
-        Debug.DrawRay(rayToSee.origin, rayToSee.direction * 5.0f);
+        Ray2D rayToSee = new Ray2D(transform.position + direction * 3.0f, direction);
+        Debug.DrawRay(rayToSee.origin, rayToSee.direction * 30.0f);
 
         // Raycast to detect the player
-        RaycastHit2D ray = Physics2D.Raycast(transform.position + direction * 0.6f,
-            player.transform.position - transform.position, 5.0f);
+        RaycastHit2D ray = Physics2D.Raycast(transform.position + direction * 3.0f,
+            player.transform.position - transform.position, 30.0f);
         if (ray.collider)
         {
             if (ray.collider.name == "Player")
@@ -97,6 +128,7 @@ public class EnemyController : MonoBehaviour
             enemyRB.velocity = Vector2.zero;
         }
     }
+
     private void Follow()
     {
         // If has line of sight or has time to be following, the enemy will follow the player
@@ -114,5 +146,9 @@ public class EnemyController : MonoBehaviour
     {
         health -= damage;
     }
-    
+
+    private void DesactivateEnemy()
+    {
+        gameObject.SetActive(false);
+    }
 }

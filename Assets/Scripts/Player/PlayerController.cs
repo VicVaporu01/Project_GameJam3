@@ -13,17 +13,16 @@ public class PlayerController : MonoBehaviour
     public AudioClip SoundGrow;
 
     private AudioSource playerSounds;
-    private float damage;
+    private float damage = 3.0f;
     private Rigidbody2D playerRB;
     public Slider Vida;
     public Slider Comida;
     public int objectsAbsorbed = 0; // Número de objetos absorbidos
     public bool hasPowerup;
     private Vector3 targetScale;
-    public float growthSpeed = 2f; 
-    private int MaxAbsorb=3;
-    private GameObject enemy; 
-    
+    public float growthSpeed = 2f;
+    private int MaxAbsorb = 3;
+    private GameObject enemy;
 
 
     // Start is called before the first frame update
@@ -31,11 +30,11 @@ public class PlayerController : MonoBehaviour
     {
         enemy = GameObject.FindWithTag("Enemy");
         playerRB = GetComponent<Rigidbody2D>();
-        
-        Vida.maxValue=health;
-        Comida.maxValue=MaxAbsorb;
-        Comida.value=0;
-        Vida.value=Vida.maxValue;
+
+        Vida.maxValue = health;
+        Comida.maxValue = MaxAbsorb;
+        Comida.value = 0;
+        Vida.value = Vida.maxValue;
         targetScale = transform.localScale;
         playerSounds = GetComponent<AudioSource>();
         
@@ -54,6 +53,7 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(gameObject); // Destruye el objeto del jugador
         }
+
         if (transform.localScale != targetScale) //lo hace crecer
         {
             transform.localScale = Vector3.Lerp(transform.localScale, targetScale, growthSpeed * Time.deltaTime);
@@ -64,7 +64,7 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(int damage)
     {
         health -= damage; // Reduce la salud del jugador
-        Vida.value=health;
+        Vida.value = health;
     }
 
     private void OnTriggerEnter2D(Collider2D other) // El jugador colisiona con el powerup y lo desaparece
@@ -73,23 +73,20 @@ public class PlayerController : MonoBehaviour
         {
             hasPowerup = true;
             speed = speed * GiveExtraSpeed();
-            Destroy(other.gameObject);
+            other.gameObject.SetActive(false);
             StartCoroutine(PowerupTimer());
             playerSounds.PlayOneShot(soundPowerup, 1.0f);
         }
-        if (other.gameObject.CompareTag("Enemy")) //
-        {
-            TakeDamage(1); // 
-        }
-        if (other.CompareTag("ObjectToAbsorb"))
+        else if (other.CompareTag("ObjectToAbsorb"))
         {
             // Absorber el objeto colisionado
             AbsorbObject();
 
             // Destruir el objeto colisionado
-            Destroy(other.gameObject);
+            other.gameObject.SetActive(false);
         }
     }
+
     private float GiveExtraSpeed()
     {
         float extraSpeed = 2.0f;
@@ -102,34 +99,34 @@ public class PlayerController : MonoBehaviour
         hasPowerup = false;
         speed = speed / GiveExtraSpeed();
     }
-    public void AbsorbObject()
-    {
-        objectsAbsorbed++; // Aumenta el contador de objetos absorbidos
-        Comida.value=objectsAbsorbed; //aumenta la barra 
-        if (objectsAbsorbed % MaxAbsorb == 0 && objectsAbsorbed > 0) //verifica si ya se comio el maximo
-        {
-            // Aumentar la escala de destino del objeto
-            MaxAbsorb++;                // aumenta la cantidad de comida necesaria para volver a crecer
-            targetScale *= 2f;
-            Comida.value=0;
-            EnemyController script = enemy.GetComponent<EnemyController>();  //puede que esto se pueda de hacer de otra forma mas optima 
-            script.IsBig = true;
-        }
-    }
-    
 
     public float GetDamage()
     {
-
         return damage;
     }
 
-    private void OnCollisionEnter2D(Collision2D other) {
-        if (other.gameObject.CompareTag("Enemy")) //
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Enemy"))
         {
-            TakeDamage(1); // 
+            TakeDamage(1);
         }
     }
 
+    public void AbsorbObject()
+    {
+        objectsAbsorbed++; // Aumenta el contador de objetos absorbidos
+        Comida.value = objectsAbsorbed; //aumenta la barra 
+        if (objectsAbsorbed % MaxAbsorb == 0 && objectsAbsorbed > 0) //verifica si ya se comio el maximo
+        {
+            // Aumentar la escala de destino del objeto
+            MaxAbsorb++; // aumenta la cantidad de comida necesaria para volver a crecer
+            targetScale *= 2f;
+            Comida.value = 0;
+            EnemyController
+                script = enemy
+                    .GetComponent<EnemyController>(); //puede que esto se pueda de hacer de otra forma mas optima 
+            script.isBig = true;
+        }
+    }
 }
-
