@@ -8,8 +8,17 @@ public class PlayerController : MonoBehaviour
 {
     public float speed = 5.0f; // Velocidad de movimiento
     public int health = 10;
-    private float damage = 3.0f;
+    public float velocity;
+
+    public AudioClip soundPowerup;
+    public AudioClip soundCollision;
+    public AudioClip SoundGrow;
+
+    private AudioSource playerSounds;
     private Rigidbody2D playerRB;
+    public Slider Vida;
+    public Slider Comida;
+    private float damage = 3.0f;
     public Slider healthSlider;
     public Slider foodSlider;
     public int objectsAbsorbed = 0; // Número de objetos absorbidos
@@ -19,12 +28,21 @@ public class PlayerController : MonoBehaviour
     private int MaxAbsorb = 3;
     private GameObject enemy;
 
+    [Header("ANIMACIONES")]
+    private Animator animator;
+    private bool hasPain = false;
+
+
 
     // Start is called before the first frame update
     void Start()
     {
         enemy = GameObject.FindWithTag("Enemy");
         playerRB = GetComponent<Rigidbody2D>();
+        playerSounds = GetComponent<AudioSource>();
+
+
+        animator = GetComponent<Animator>();
 
         healthSlider.maxValue = health;
         foodSlider.maxValue = MaxAbsorb;
@@ -36,28 +54,43 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        velocity = playerRB.velocity.magnitude;
+        
         float moveHorizontal = Input.GetAxis("Horizontal"); // Obtiene el input horizontal 
         float moveVertical = Input.GetAxis("Vertical"); // Obtiene el input vertical (
 
         Vector2 movement = new Vector2(moveHorizontal, moveVertical); // Crea un vector de movimiento
+
+        animator.SetFloat("Velocity", Mathf.Abs(velocity));
 
         playerRB.velocity = movement * speed; // Aplica el movimiento al Rigidbody2D del jugador
         if (health <= 0) // Si la salud es 0 o menos
         {
             Destroy(gameObject); // Destruye el objeto del jugador
         }
-
+        
         if (transform.localScale != targetScale) //lo hace crecer
         {
             transform.localScale = Vector3.Lerp(transform.localScale, targetScale, growthSpeed * Time.deltaTime);
         }
     }
 
+    
+
     // Función para recibir daño
     public void TakeDamage(int damage)
     {
         health -= damage; // Reduce la salud del jugador
         healthSlider.value = health;
+        hasPain = true;
+        animator.SetBool("Pain", hasPain);
+        HasPain();
+
+    }
+    IEnumerator HasPain()
+    {
+        yield return new WaitForSeconds(1);
+        hasPain = false;
     }
 
     private void OnTriggerEnter2D(Collider2D other) // El jugador colisiona con el powerup y lo desaparece
@@ -68,6 +101,19 @@ public class PlayerController : MonoBehaviour
             speed = speed * GiveExtraSpeed();
             other.gameObject.SetActive(false);
             StartCoroutine(PowerupTimer());
+            playerSounds.PlayOneShot(soundPowerup, 1.0f);
+        }
+        if (other.gameObject.CompareTag("Enemy")) //
+        {
+            TakeDamage(1); // 
+        }
+        if (other.CompareTag("ObjectToAbsorb"))
+        {
+            // Absorber el objeto colisionado
+            AbsorbObject();
+
+            // Destruir el objeto colisionado
+            Destroy(other.gameObject);
         }
         else if (other.CompareTag("ObjectToAbsorb"))
         {
@@ -91,6 +137,20 @@ public class PlayerController : MonoBehaviour
         hasPowerup = false;
         speed = speed / GiveExtraSpeed();
     }
+    public void AbsorbObject()
+    {
+        objectsAbsorbed++; // Aumenta el contador de objetos absorbidos
+        Comida.value = objectsAbsorbed; //aumenta la barra 
+        if (objectsAbsorbed % MaxAbsorb == 0 && objectsAbsorbed > 0) //verifica si ya se comio el maximo
+        {
+            // Aumentar la escala de destino del objeto
+            MaxAbsorb++;                // aumenta la cantidad de comida necesaria para volver a crecer
+            targetScale *= 2f;
+            Comida.value = 0;
+            EnemyController script = enemy.GetComponent<EnemyController>();  //puede que esto se pueda de hacer de otra forma mas optima 
+            script.IsBig = true;
+        }
+    }
 
     public float GetDamage()
     {
@@ -99,7 +159,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        if (other.gameObject.CompareTag("Enemy"))
+        if (other.gameObject.CompareTag("Enemy")) //
         {
             TakeDamage(1);
         }
