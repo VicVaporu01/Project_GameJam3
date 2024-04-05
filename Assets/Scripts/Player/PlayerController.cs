@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(gameObject); // Destruye el objeto del jugador
         }
-        if (transform.localScale != targetScale)
+        if (transform.localScale != targetScale) //lo hace crecer
         {
             transform.localScale = Vector3.Lerp(transform.localScale, targetScale, growthSpeed * Time.deltaTime);
         }
@@ -95,14 +95,14 @@ public class PlayerController : MonoBehaviour
     public void AbsorbObject()
     {
         objectsAbsorbed++; // Aumenta el contador de objetos absorbidos
-        Comida.value=objectsAbsorbed;
-        if (objectsAbsorbed % MaxAbsorb == 0 && objectsAbsorbed > 0)
+        Comida.value=objectsAbsorbed; //aumenta la barra 
+        if (objectsAbsorbed % MaxAbsorb == 0 && objectsAbsorbed > 0) //verifica si ya se comio el maximo
         {
             // Aumentar la escala de destino del objeto
-            MaxAbsorb++;
+            MaxAbsorb++;                // aumenta la cantidad de comida necesaria para volver a crecer
             targetScale *= 2f;
             Comida.value=0;
-            EnemyController script = enemy.GetComponent<EnemyController>();
+            EnemyController script = enemy.GetComponent<EnemyController>();  //puede que esto se pueda de hacer de otra forma mas optima 
             script.IsBig = true;
         }
     }
