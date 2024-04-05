@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
@@ -9,8 +10,8 @@ public class PlayerController : MonoBehaviour
     public int health = 10;
     private float damage = 3.0f;
     private Rigidbody2D playerRB;
-    public Slider Vida;
-    public Slider Comida;
+    public Slider healthSlider;
+    public Slider foodSlider;
     public int objectsAbsorbed = 0; // Número de objetos absorbidos
     public bool hasPowerup;
     private Vector3 targetScale;
@@ -25,10 +26,10 @@ public class PlayerController : MonoBehaviour
         enemy = GameObject.FindWithTag("Enemy");
         playerRB = GetComponent<Rigidbody2D>();
 
-        Vida.maxValue = health;
-        Comida.maxValue = MaxAbsorb;
-        Comida.value = 0;
-        Vida.value = Vida.maxValue;
+        healthSlider.maxValue = health;
+        foodSlider.maxValue = MaxAbsorb;
+        foodSlider.value = 0;
+        healthSlider.value = healthSlider.maxValue;
         targetScale = transform.localScale;
     }
 
@@ -56,7 +57,7 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(int damage)
     {
         health -= damage; // Reduce la salud del jugador
-        Vida.value = health;
+        healthSlider.value = health;
     }
 
     private void OnTriggerEnter2D(Collider2D other) // El jugador colisiona con el powerup y lo desaparece
@@ -107,15 +108,17 @@ public class PlayerController : MonoBehaviour
     public void AbsorbObject()
     {
         objectsAbsorbed++; // Aumenta el contador de objetos absorbidos
-        Comida.value = objectsAbsorbed; //aumenta la barra 
-        if (objectsAbsorbed == MaxAbsorb && objectsAbsorbed > 0) //verifica si ya se comio el maximo
+        foodSlider.value = objectsAbsorbed; //aumenta la barra 
+        if (objectsAbsorbed % MaxAbsorb == 0 && objectsAbsorbed > 0) //verifica si ya se comio el maximo
         {
             // Aumentar la escala de destino del objeto
             MaxAbsorb++; // aumenta la cantidad de comida necesaria para volver a crecer
             targetScale *= 2f;
-            Comida.value = 0;
-            // EnemyController script = enemy.GetComponent<EnemyController>();
-            // script.isBig = true;
+            foodSlider.value = 0;
+            EnemyController
+                script = enemy
+                    .GetComponent<EnemyController>(); //puede que esto se pueda de hacer de otra forma mas optima 
+            script.isBig = true;
         }
     }
 }
