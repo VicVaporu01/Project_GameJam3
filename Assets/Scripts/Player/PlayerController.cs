@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     public float speed = 5.0f; // Velocidad de movimiento
     public int health = 10;
-    private float damage;
+    private float damage = 3.0f;
     private Rigidbody2D playerRB;
     public Slider Vida;
     public Slider Comida;
@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
     private int MaxAbsorb=3;
     private GameObject enemy; 
     
+
 
     // Start is called before the first frame update
     void Start()
@@ -64,7 +65,7 @@ public class PlayerController : MonoBehaviour
         {
             hasPowerup = true;
             speed = speed * GiveExtraSpeed();
-            Destroy(other.gameObject);
+            other.gameObject.SetActive(false);
             StartCoroutine(PowerupTimer());
         }
         if (other.gameObject.CompareTag("Enemy")) //
@@ -80,6 +81,7 @@ public class PlayerController : MonoBehaviour
             Destroy(other.gameObject);
         }
     }
+
     private float GiveExtraSpeed()
     {
         float extraSpeed = 2.0f;
@@ -92,6 +94,20 @@ public class PlayerController : MonoBehaviour
         hasPowerup = false;
         speed = speed / GiveExtraSpeed();
     }
+
+    public float GetDamage()
+    {
+        return damage;
+    }
+
+    // private void OnCollisionEnter2D(Collision2D other)
+    // {
+    //     if (other.gameObject.CompareTag("Enemy")) //
+    //     {
+    //         TakeDamage(1); // 
+    //     }
+    // }
+}
     public void AbsorbObject()
     {
         objectsAbsorbed++; // Aumenta el contador de objetos absorbidos
