@@ -113,4 +113,16 @@ public class EnemyController : MonoBehaviour
     {
         health -= damage;
     }
+    private void Follow()
+    {
+        // If has line of sight or has time to be following, the enemy will follow the player
+        if (hasLineOfSight || timeScaping >= 0.0f)
+        {
+            enemyRB.velocity = (player.transform.position - transform.position).normalized * movementSpeed;
+        }
+        else
+        {
+            enemyRB.velocity = Vector2.zero;
+        }
+    }
 }
