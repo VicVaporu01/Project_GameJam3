@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     public float speed = 5.0f; // Velocidad de movimiento
     public int health = 10;
+    public float velocity;
 
     public AudioClip soundPowerup;
     public AudioClip soundCollision;
@@ -20,10 +21,14 @@ public class PlayerController : MonoBehaviour
     public int objectsAbsorbed = 0; // Número de objetos absorbidos
     public bool hasPowerup;
     private Vector3 targetScale;
-    public float growthSpeed = 2f; 
-    private int MaxAbsorb=3;
-    private GameObject enemy; 
-    
+    public float growthSpeed = 2f;
+    private int MaxAbsorb = 3;
+    private GameObject enemy;
+
+    [Header("ANIMACIONES")]
+    private Animator animator;
+    private bool hasPain = false;
+
 
 
     // Start is called before the first frame update
@@ -32,22 +37,27 @@ public class PlayerController : MonoBehaviour
         enemy = GameObject.FindWithTag("Enemy");
         playerRB = GetComponent<Rigidbody2D>();
         playerSounds = GetComponent<AudioSource>();
-        
-        
-        Vida.maxValue=health;
-        Comida.maxValue=MaxAbsorb;
-        Comida.value=0;
-        Vida.value=Vida.maxValue;
+
+
+        Vida.maxValue = health;
+        Comida.maxValue = MaxAbsorb;
+        Comida.value = 0;
+        Vida.value = Vida.maxValue;
         targetScale = transform.localScale;
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        velocity = playerRB.velocity.magnitude;
+        
         float moveHorizontal = Input.GetAxis("Horizontal"); // Obtiene el input horizontal 
         float moveVertical = Input.GetAxis("Vertical"); // Obtiene el input vertical (
 
         Vector2 movement = new Vector2(moveHorizontal, moveVertical); // Crea un vector de movimiento
+
+        animator.SetFloat("Velocity", Mathf.Abs(velocity));
 
         playerRB.velocity = movement * speed; // Aplica el movimiento al Rigidbody2D del jugador
         if (health <= 0) // Si la salud es 0 o menos
@@ -60,11 +70,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    
+
     // Función para recibir daño
     public void TakeDamage(int damage)
     {
         health -= damage; // Reduce la salud del jugador
-        Vida.value=health;
+        Vida.value = health;
+        hasPain = true;
+        animator.SetBool("Pain", hasPain);
+        HasPain();
+
+    }
+    IEnumerator HasPain()
+    {
+        yield return new WaitForSeconds(1);
+        hasPain = false;
     }
 
     private void OnTriggerEnter2D(Collider2D other) // El jugador colisiona con el powerup y lo desaparece
@@ -105,26 +126,27 @@ public class PlayerController : MonoBehaviour
     public void AbsorbObject()
     {
         objectsAbsorbed++; // Aumenta el contador de objetos absorbidos
-        Comida.value=objectsAbsorbed; //aumenta la barra 
+        Comida.value = objectsAbsorbed; //aumenta la barra 
         if (objectsAbsorbed % MaxAbsorb == 0 && objectsAbsorbed > 0) //verifica si ya se comio el maximo
         {
             // Aumentar la escala de destino del objeto
             MaxAbsorb++;                // aumenta la cantidad de comida necesaria para volver a crecer
             targetScale *= 2f;
-            Comida.value=0;
+            Comida.value = 0;
             EnemyController script = enemy.GetComponent<EnemyController>();  //puede que esto se pueda de hacer de otra forma mas optima 
             script.IsBig = true;
         }
     }
-    
-}
+
+
     public float GetDamage()
     {
 
         return damage;
     }
 
-    private void OnCollisionEnter2D(Collision2D other) {
+    private void OnCollisionEnter2D(Collision2D other)
+    {
         if (other.gameObject.CompareTag("Enemy")) //
         {
             TakeDamage(1); // 
@@ -132,4 +154,3 @@ public class PlayerController : MonoBehaviour
     }
 
 }
-
