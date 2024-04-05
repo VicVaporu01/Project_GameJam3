@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
 
     public bool hasPowerup;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -70,3 +71,18 @@ public class PlayerController : MonoBehaviour
         speed = speed / GiveExtraSpeed();
     }
 }
+    public float GetDamage()
+    {
+
+        return damage;
+    }
+
+    private void OnCollisionEnter2D(Collision2D other) {
+        if (other.gameObject.CompareTag("Enemy")) //
+        {
+            TakeDamage(1); // 
+        }
+    }
+
+}
+
