@@ -111,7 +111,7 @@ public class PlayerController : MonoBehaviour
         healthSlider.value = health;
         hasPain = true;
         playerAnimator.SetBool("Pain", hasPain);
-        HasPain();
+        StartCoroutine(HasPain());
     }
 
     private IEnumerator HasPain()
