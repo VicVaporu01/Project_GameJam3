@@ -120,9 +120,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99a33ff1923c39343a575812d0a4942b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  soundPowerup: {fileID: 8300000, guid: 8adcf72c54157944ebbef20b6e734dac, type: 3}
+  soundCollision: {fileID: 8300000, guid: 0349cf2441d3e2949bf1bc04d22bcfc5, type: 3}
+  SoundGrow: {fileID: 8300000, guid: 8b1ff2e41e9deaf49bcf2292afff13a2, type: 3}
   speed: 10
+  velocity: 0
   health: 100
+  healthSlider: {fileID: 0}
+  foodSlider: {fileID: 0}
+  objectsAbsorbed: 0
   hasPowerup: 0
+  growthSpeed: 2
 --- !u!61 &2564533651775025585
 BoxCollider2D:
   m_ObjectHideFlags: 0
