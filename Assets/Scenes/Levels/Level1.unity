@@ -274,8 +274,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabPowerup: {fileID: 2164745379522915585, guid: 3d5500dfaa3295d499fac39172388c91, type: 3}
-  enemyPool: {fileID: 20609712}
-  powerupPool: {fileID: 1594664982}
+  enemyPool: {fileID: 0}
+  powerupPool: {fileID: 0}
 --- !u!4 &107346295
 Transform:
   m_ObjectHideFlags: 0
