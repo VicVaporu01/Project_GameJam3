@@ -274,8 +274,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabPowerup: {fileID: 2164745379522915585, guid: 3d5500dfaa3295d499fac39172388c91, type: 3}
-  enemyPool: {fileID: 20609712}
-  powerupPool: {fileID: 1594664982}
+  enemyPool: {fileID: 0}
+  powerupPool: {fileID: 0}
 --- !u!4 &107346295
 Transform:
   m_ObjectHideFlags: 0
@@ -731,14 +731,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    - target: {fileID: 2564533651775025549, guid: c78137a8fa423e94d9095c1a286719ce, type: 3}
-      propertyPath: foodSlider
-      value: 
-      objectReference: {fileID: 706920805}
-    - target: {fileID: 2564533651775025549, guid: c78137a8fa423e94d9095c1a286719ce, type: 3}
-      propertyPath: healthSlider
-      value: 
-      objectReference: {fileID: 706920805}
     - target: {fileID: 2564533651775025549, guid: c78137a8fa423e94d9095c1a286719ce, type: 3}
       propertyPath: foodSlider
       value: 
