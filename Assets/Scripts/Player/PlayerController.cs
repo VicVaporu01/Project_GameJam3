@@ -64,23 +64,14 @@ public class PlayerController : MonoBehaviour
         {
             transform.localScale = Vector3.Lerp(transform.localScale, targetScale, growthSpeed * Time.deltaTime);
         }
-    }    
-
-    // Función para recibir daño
-    public void TakeDamage(int damage)
-    {
-        health -= damage; // Reduce la salud del jugador
-        healthSlider.value = health;
-        hasPain = true;
-        animator.SetBool("Pain", hasPain);
-        StartCoroutine(HasPain());
     }
+
+
     IEnumerator HasPain()
     {
         yield return new WaitForSeconds(1);
         hasPain = false;
-        animator.SetBool("Pain", hasPain);
-
+        playerAnimator.SetBool("Pain", hasPain);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -129,12 +120,6 @@ public class PlayerController : MonoBehaviour
         hasPain = true;
         playerAnimator.SetBool("Pain", hasPain);
         StartCoroutine(HasPain());
-    }
-
-    private IEnumerator HasPain()
-    {
-        yield return new WaitForSeconds(1);
-        hasPain = false;
     }
 
     public float GetDamage()
