@@ -12,13 +12,16 @@ public class RandomSoundPlayer : MonoBehaviour
 
     private IEnumerator PlayRandomSound()
     {
+        yield return new WaitForSeconds(2 * 60);
         while (true)
         {
             // Espera un tiempo aleatorio entre 1 y 10 segundos
-            yield return new WaitForSeconds(Random.Range(1f, 10f));
+            
 
             // Reproduce un sonido aleatorio
             AudioManager.Instance.PlayRandomAudioClip();
+
+            yield return new WaitForSeconds(Random.Range(60f, 100f));
         }
     }
 }
