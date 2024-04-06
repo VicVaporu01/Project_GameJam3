@@ -9,6 +9,7 @@ public class EnemyController : MonoBehaviour
     private Rigidbody2D enemyRB;
     public bool isBig;
     private GameObject player;
+    private PlayerController playerScript;
 
     [SerializeField] private float movementSpeed = 3;
 
@@ -19,11 +20,17 @@ public class EnemyController : MonoBehaviour
     private bool isPushed = false;
     private float pushDelay = 0.5f;
     private float pushTimer = 0f;
-
+    
+    [Header("ANIMACIONES")] private Animator EnemyAnimator;
+    [SerializeField] private bool hasPain = false;
     private void Start()
     {
         enemyRB = GetComponent<Rigidbody2D>();
         player = GameObject.Find("Player");
+        EnemyAnimator = GetComponent<Animator>();
+        playerScript = player.GetComponent<PlayerController>();
+        
+
     }
 
     private void Update()
@@ -59,13 +66,16 @@ public class EnemyController : MonoBehaviour
         DetectPlayer();
         if (!isPushed)
         {
+            isBig = playerScript.Big;
             if (isBig)
             {
                 Escape();
+                EnemyAnimator.SetBool("IsBig",true);
             }
             else
             {
                 Follow();
+                EnemyAnimator.SetBool("IsBig",false);
             }
         }
 
@@ -92,11 +102,11 @@ public class EnemyController : MonoBehaviour
         Vector3 direction = (player.transform.position - transform.position).normalized;
 
         // To see the raycast in the scene view
-        Ray2D rayToSee = new Ray2D(transform.position + direction * 3.0f, direction);
+        Ray2D rayToSee = new Ray2D(transform.position + direction * 7.0f, direction);
         Debug.DrawRay(rayToSee.origin, rayToSee.direction * 30.0f);
 
         // Raycast to detect the player
-        RaycastHit2D ray = Physics2D.Raycast(transform.position + direction * 3.0f,
+        RaycastHit2D ray = Physics2D.Raycast(transform.position + direction * 7.0f,
             player.transform.position - transform.position, 30.0f);
         if (ray.collider)
         {
@@ -127,6 +137,7 @@ public class EnemyController : MonoBehaviour
         if (hasLineOfSight || timeScaping >= 0.0f)
         {
             enemyRB.velocity = (transform.position - player.transform.position).normalized * movementSpeed;
+
         }
         else
         {

@@ -12,7 +12,8 @@ public class PlayerController : MonoBehaviour
 
     [Header("PLAYER STATS")] private Vector3 targetScale;
     [SerializeField] private float speed = 5.0f, velocity;
-    [SerializeField] private int health = 10;
+    [SerializeField] private float health = 10f;
+    [SerializeField] public bool Big= false;
     private float damage = 3.0f;
 
     [SerializeField] private Slider healthSlider, foodSlider;
@@ -55,9 +56,10 @@ public class PlayerController : MonoBehaviour
         playerRB.velocity = movement * speed;
         if (health <= 0)
         {
-            Destroy(gameObject);
+          //  Destroy(gameObject);
             isDead = true;
-            playerAnimator.SetBool("isDead", isDead);
+            playerAnimator.SetBool("Death", true);
+            StartCoroutine(WaitForDeathAnimation());
         }
 
         if (transform.localScale != targetScale)
@@ -65,7 +67,14 @@ public class PlayerController : MonoBehaviour
             transform.localScale = Vector3.Lerp(transform.localScale, targetScale, growthSpeed * Time.deltaTime);
         }
     }
+private IEnumerator WaitForDeathAnimation()
+    {
+        
+         yield return new WaitForSeconds(1f);
 
+        // Luego, pausa el tiempo del juego
+        Time.timeScale = 0f;
+    }
 
     IEnumerator HasPain()
     {
@@ -137,6 +146,11 @@ public class PlayerController : MonoBehaviour
             MaxAbsorb++;
             targetScale *= 2f;
             foodSlider.value = 0;
+            Big=true;
+            healthSlider.maxValue +=2;
+            health=healthSlider.maxValue;
+            foodSlider.maxValue = MaxAbsorb;
+            healthSlider.value = healthSlider.maxValue;
         }
     }
 }
