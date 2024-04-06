@@ -17,8 +17,8 @@ public class PlayerController : MonoBehaviour
     private AudioSource playerSounds;
     private float damage = 3.0f;
     private Rigidbody2D playerRB;
-    public Slider Vida;
-    public Slider Comida;
+
+ 
     public Slider healthSlider;
     public Slider foodSlider;
     public int objectsAbsorbed = 0; // Número de objetos absorbidos
@@ -161,7 +161,7 @@ public class PlayerController : MonoBehaviour
         {
             // Aumentar la escala de destino del objeto
             MaxAbsorb++; // aumenta la cantidad de comida necesaria para volver a crecer
-            Comida.maxValue = MaxAbsorb;
+            foodSlider.maxValue = MaxAbsorb;
             objectsAbsorbed=0;
             targetScale *= 2f;
             foodSlider.value = 0;
