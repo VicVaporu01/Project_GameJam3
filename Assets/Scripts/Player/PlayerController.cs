@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("PLAYER STATS")] private Vector3 targetScale;
     [SerializeField] private float speed = 5.0f, velocity;
-    [SerializeField] private int health = 10;
+    [SerializeField] private float health = 10f;
     [SerializeField] public bool Big= false;
     private float damage = 3.0f;
 
@@ -139,6 +139,10 @@ public class PlayerController : MonoBehaviour
             targetScale *= 2f;
             foodSlider.value = 0;
             Big=true;
+            healthSlider.maxValue +=2;
+            health=healthSlider.maxValue;
+            foodSlider.maxValue = MaxAbsorb;
+            healthSlider.value = healthSlider.maxValue;
         }
     }
 }
