@@ -15,22 +15,21 @@ public class PlayerController : MonoBehaviour
     public AudioClip SoundGrow;
 
     private AudioSource playerSounds;
-    private float damage = 3.0f;
     private Rigidbody2D playerRB;
 
- 
+    private float damage = 3.0f;
     public Slider healthSlider;
     public Slider foodSlider;
     public int objectsAbsorbed = 0; // Número de objetos absorbidos
     public bool hasPowerup;
     private Vector3 targetScale;
     public float growthSpeed = 2f;
-    public int MaxAbsorb = 3;
+    private int MaxAbsorb = 3;
     private GameObject enemy;
 
     [Header("ANIMACIONES")]
     private Animator animator;
-    private bool hasPain = false;
+    public bool hasPain = false;
 
 
 
@@ -39,6 +38,7 @@ public class PlayerController : MonoBehaviour
     {
         enemy = GameObject.FindWithTag("Enemy");
         playerRB = GetComponent<Rigidbody2D>();
+        playerSounds = GetComponent<AudioSource>();
 
 
         animator = GetComponent<Animator>();
@@ -48,8 +48,6 @@ public class PlayerController : MonoBehaviour
         foodSlider.value = 0;
         healthSlider.value = healthSlider.maxValue;
         targetScale = transform.localScale;
-        playerSounds = GetComponent<AudioSource>();
-        
     }
 
     // Update is called once per frame
@@ -85,13 +83,14 @@ public class PlayerController : MonoBehaviour
         healthSlider.value = health;
         hasPain = true;
         animator.SetBool("Pain", hasPain);
-        HasPain();
-
+        StartCoroutine(HasPain());
     }
     IEnumerator HasPain()
     {
         yield return new WaitForSeconds(1);
         hasPain = false;
+        animator.SetBool("Pain", hasPain);
+
     }
 
     private void OnTriggerEnter2D(Collider2D other) // El jugador colisiona con el powerup y lo desaparece
@@ -103,10 +102,6 @@ public class PlayerController : MonoBehaviour
             other.gameObject.SetActive(false);
             StartCoroutine(PowerupTimer());
             playerSounds.PlayOneShot(soundPowerup, 1.0f);
-        }
-        if (other.gameObject.CompareTag("Enemy")) //
-        {
-            TakeDamage(1); // 
         }
         if (other.CompareTag("ObjectToAbsorb"))
         {
@@ -138,7 +133,7 @@ public class PlayerController : MonoBehaviour
         hasPowerup = false;
         speed = speed / GiveExtraSpeed();
     }
-
+    
 
     public float GetDamage()
     {
@@ -161,8 +156,6 @@ public class PlayerController : MonoBehaviour
         {
             // Aumentar la escala de destino del objeto
             MaxAbsorb++; // aumenta la cantidad de comida necesaria para volver a crecer
-            foodSlider.maxValue = MaxAbsorb;
-            objectsAbsorbed=0;
             targetScale *= 2f;
             foodSlider.value = 0;
             EnemyController
