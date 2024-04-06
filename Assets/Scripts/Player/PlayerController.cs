@@ -58,7 +58,8 @@ public class PlayerController : MonoBehaviour
         {
           //  Destroy(gameObject);
             isDead = true;
-            playerAnimator.SetBool("Dead", isDead);
+            playerAnimator.SetBool("Death", true);
+            StartCoroutine(WaitForDeathAnimation());
         }
 
         if (transform.localScale != targetScale)
@@ -66,7 +67,14 @@ public class PlayerController : MonoBehaviour
             transform.localScale = Vector3.Lerp(transform.localScale, targetScale, growthSpeed * Time.deltaTime);
         }
     }
+private IEnumerator WaitForDeathAnimation()
+    {
+        
+         yield return new WaitForSeconds(1f);
 
+        // Luego, pausa el tiempo del juego
+        Time.timeScale = 0f;
+    }
 
     IEnumerator HasPain()
     {
