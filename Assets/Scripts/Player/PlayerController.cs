@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     [Header("PLAYER STATS")] private Vector3 targetScale;
     [SerializeField] private float speed = 5.0f, velocity;
     [SerializeField] private int health = 10;
+    [SerializeField] public bool Big= false;
     private float damage = 3.0f;
 
     [SerializeField] private Slider healthSlider, foodSlider;
@@ -55,9 +56,9 @@ public class PlayerController : MonoBehaviour
         playerRB.velocity = movement * speed;
         if (health <= 0)
         {
-            Destroy(gameObject);
+          //  Destroy(gameObject);
             isDead = true;
-            playerAnimator.SetBool("isDead", isDead);
+            playerAnimator.SetBool("Dead", isDead);
         }
 
         if (transform.localScale != targetScale)
@@ -137,6 +138,7 @@ public class PlayerController : MonoBehaviour
             MaxAbsorb++;
             targetScale *= 2f;
             foodSlider.value = 0;
+            Big=true;
         }
     }
 }
