@@ -7,12 +7,13 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D playerRB;
-    private AudioSource playerSounds;
     [SerializeField] private AudioClip soundPowerup, soundCollision, SoundGrow;
 
-    [Header("PLAYER STATS")] private Vector3 targetScale;
+    [Header("PLAYER STATS")] 
+    private Vector3 targetScale;
     [SerializeField] private float speed = 5.0f, velocity;
-    [SerializeField] private int health = 10;
+    [SerializeField] private float health = 10f;
+    [SerializeField] public bool Big = false;
     private float damage = 3.0f;
 
     [SerializeField] private Slider healthSlider, foodSlider;
@@ -21,7 +22,8 @@ public class PlayerController : MonoBehaviour
     private float growthSpeed = 2f;
     private int MaxAbsorb = 3;
 
-    [Header("ANIMACIONES")] private Animator playerAnimator;
+    [Header("ANIMACIONES")] 
+    private Animator playerAnimator;
     [SerializeField] private bool hasPain = false;
     [SerializeField] private bool isDead = false;
 
@@ -29,8 +31,6 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         playerRB = GetComponent<Rigidbody2D>();
-        playerSounds = GetComponent<AudioSource>();
-
 
         playerAnimator = GetComponent<Animator>();
 
@@ -55,9 +55,10 @@ public class PlayerController : MonoBehaviour
         playerRB.velocity = movement * speed;
         if (health <= 0)
         {
-            Destroy(gameObject);
+            //  Destroy(gameObject);
             isDead = true;
-            playerAnimator.SetBool("isDead", isDead);
+            playerAnimator.SetBool("Death", true);
+            StartCoroutine(WaitForDeathAnimation());
         }
 
         if (transform.localScale != targetScale)
@@ -66,8 +67,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private IEnumerator WaitForDeathAnimation()
+    {
+        yield return new WaitForSeconds(1f);
 
-    IEnumerator HasPain()
+        // Luego, pausa el tiempo del juego
+        Time.timeScale = 0f;
+    }
+
+    private IEnumerator HasPain()
     {
         yield return new WaitForSeconds(1);
         hasPain = false;
@@ -82,7 +90,7 @@ public class PlayerController : MonoBehaviour
             speed *= GiveExtraSpeed();
             other.gameObject.SetActive(false);
             StartCoroutine(PowerupTimer());
-            playerSounds.PlayOneShot(soundPowerup, 1.0f);
+            AudioManager.Instance.GetAudioSource().PlayOneShot(soundPowerup, 1.0f);
         }
         else if (other.CompareTag("ObjectToAbsorb"))
         {
@@ -96,6 +104,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Enemy")) //
         {
+            AudioManager.Instance.GetAudioSource().PlayOneShot(soundCollision, 1.0f);
             TakeDamage(1);
         }
     }
@@ -129,6 +138,7 @@ public class PlayerController : MonoBehaviour
 
     public void AbsorbObject()
     {
+        AudioManager.Instance.GetAudioSource().PlayOneShot(SoundGrow, 1.0f);
         objectsAbsorbed++;
         foodSlider.value = objectsAbsorbed;
         // Aument the scale of the player
@@ -137,6 +147,11 @@ public class PlayerController : MonoBehaviour
             MaxAbsorb++;
             targetScale *= 2f;
             foodSlider.value = 0;
+            Big = true;
+            healthSlider.maxValue += 2;
+            health = healthSlider.maxValue;
+            foodSlider.maxValue = MaxAbsorb;
+            healthSlider.value = healthSlider.maxValue;
         }
     }
 }

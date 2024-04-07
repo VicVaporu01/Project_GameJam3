@@ -8,12 +8,17 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private EnemyPool enemyPool;
     [SerializeField] private PowerupPool powerupPool;
 
-    private float spawnRangeX = 10f, spawnRangeY = 10f; // Rango en el eje X donde se generan los enemigos
+    private float spawnRangeX = 50.0f, spawnRangeY = 180.0f; // Rango en el eje X donde se generan los enemigos
     private float spawnDelay = 5.0f; // Retraso entre cada generación de enemigos
 
     // Start is called before the first frame update
     private void Start()
     {
+        for (int i = 0; i < 20; i++)
+        {
+            SpawnEnemy();
+        }
+
         // Iniciar la generación continua de enemigos
         InvokeRepeating("SpawnEnemy", 0.5f, spawnDelay);
 
@@ -24,7 +29,6 @@ public class SpawnManager : MonoBehaviour
     // Genera un solo enemigo en una posición aleatoria
     private void SpawnEnemy()
     {
-        Debug.Log("Instantiating enemy.");
         // Calcular la posición aleatoria dentro del rango definido
         Vector3 spawnPosition = new Vector3(Random.Range(-spawnRangeX, spawnRangeX),
             Random.Range(-spawnRangeY, spawnRangeY), 0f);
@@ -38,7 +42,7 @@ public class SpawnManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("No enemy available.");
+            // Debug.Log("No enemy available.");
         }
 
         // Instanciar el powerup en la misma posición (si lo deseas)

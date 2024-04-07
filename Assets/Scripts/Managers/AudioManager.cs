@@ -42,4 +42,10 @@ public class AudioManager : MonoBehaviour
         int randomIndex = Random.Range(0, audioClips.Length);
         PlayAudioClip(randomIndex);
     }
+    
+    public AudioSource GetAudioSource()
+    {
+        return audioSource;
+    }
+    
 }
