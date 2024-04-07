@@ -2,70 +2,84 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class CanvasManager : MonoBehaviour
 {
     public GameObject inicioCanvas;
     public GameObject pauseCanvas;
     public GameObject gameOverCanvas;
-    public GameObject winCanvas; // Agregamos una referencia al canvas de la escena Win
+    public Text cigarrosText;
+    public Text vidaText;
 
-    public Button playButton;
-    public Button optionsButton;
-    public Button tutorialButton;
-    public Button exitButton;
-    public Button replayButton; // Botón para reiniciar la escena Game Over
-    public Button restartButton; // Botón para reiniciar la escena Win
+    private int cigarrosRecogidos;
+    private int vida;
 
     void Start()
     {
+        // Al iniciar el juego, mostrar el canvas de inicio y ocultar los demás
         ShowInicioCanvas();
         HidePauseCanvas();
         HideGameOverCanvas();
-        HideWinCanvas(); // Al inicio, ocultamos el canvas de la escena Win
 
-        playButton.onClick.AddListener(OnInicioPlayButtonClick);
-        optionsButton.onClick.AddListener(OnOptionsButtonClick);
-        tutorialButton.onClick.AddListener(OnTutorialButtonClick);
-        exitButton.onClick.AddListener(OnExitButtonClick);
-        replayButton.onClick.AddListener(OnGameOverReplayButtonClick); // Escuchamos el clic del botón "Replay"
-        restartButton.onClick.AddListener(OnWinRestartButtonClick); // Escuchamos el clic del botón "Restart"
+        // Inicializar valores
+        cigarrosRecogidos = 0;
+        vida = 3; // Puedes ajustar este valor según tu juego
+
+        UpdateCigarrosText();
+        UpdateVidaText();
     }
 
-    void OnInicioPlayButtonClick()
+    void UpdateCigarrosText()
     {
-        Debug.Log("<color=green>¡El juego ha comenzado desde el inicio!</color>");
-        // Aquí deberías cargar la escena del juego desde el inicio o realizar cualquier otra acción necesaria
+        // Actualizar el texto del contador de cigarros
+        cigarrosText.text = "Cigarros: " + cigarrosRecogidos;
     }
 
-    void OnGameOverReplayButtonClick()
+    void UpdateVidaText()
     {
-        Debug.Log("<color=orange>¡Reiniciando el juego desde el game over!</color>");
-        // Aquí deberías reiniciar la escena del juego o realizar cualquier otra acción necesaria
+        // Actualizar el texto del contador de vida
+        vidaText.text = "Vida: " + vida;
     }
 
-    void OnWinRestartButtonClick()
+    public void AddCigarro()
     {
-        Debug.Log("<color=blue>¡Reiniciando la escena Win!</color>");
-        // Aquí deberías reiniciar la escena Win o realizar cualquier otra acción necesaria
+        // Incrementar el contador de cigarros al recoger uno
+        cigarrosRecogidos++;
+        UpdateCigarrosText();
+
+        // Verificar si se han recogido todos los cigarros (condición para ganar el juego)
+        if (cigarrosRecogidos >= 20)
+        {
+            SceneManager.LoadScene("WinScene"); // Cambiar al nombre de la escena de victoria
+        }
     }
 
-    void OnOptionsButtonClick()
+    public void DamagePlayer()
     {
-        Debug.Log("<color=yellow>¡Abriendo opciones!</color>");
-        // Aquí deberías mostrar el canvas de opciones o realizar cualquier otra acción necesaria
+        // Reducir la vida del jugador
+        vida--;
+
+        // Actualizar el texto de vida
+        UpdateVidaText();
+
+        // Verificar si el jugador se queda sin vida (game over)
+        if (vida <= 0)
+        {
+            GameOver();
+        }
     }
 
-    void OnTutorialButtonClick()
+    void GameOver()
     {
-        Debug.Log("<color=blue>¡Abriendo tutorial!</color>");
-        // Aquí deberías mostrar el canvas de tutorial o realizar cualquier otra acción necesaria
+        // Mostrar el canvas de Game Over
+        ShowGameOverCanvas();
     }
 
-    void OnExitButtonClick()
+    public void RestartGame()
     {
-        Debug.Log("<color=red>¡Saliendo del juego!</color>");
-        // Aquí deberías salir del juego o volver al menú principal
+        // Reiniciar el juego cargando la escena actual
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void ShowInicioCanvas()
@@ -73,7 +87,6 @@ public class CanvasManager : MonoBehaviour
         inicioCanvas.SetActive(true);
         pauseCanvas.SetActive(false);
         gameOverCanvas.SetActive(false);
-        winCanvas.SetActive(false); // Al mostrar el canvas de inicio, también ocultamos el canvas de la escena Win
     }
 
     public void ShowPauseCanvas()
@@ -81,7 +94,6 @@ public class CanvasManager : MonoBehaviour
         inicioCanvas.SetActive(false);
         pauseCanvas.SetActive(true);
         gameOverCanvas.SetActive(false);
-        winCanvas.SetActive(false); // Al mostrar el canvas de pausa, también ocultamos el canvas de la escena Win
     }
 
     public void ShowGameOverCanvas()
@@ -89,12 +101,6 @@ public class CanvasManager : MonoBehaviour
         inicioCanvas.SetActive(false);
         pauseCanvas.SetActive(false);
         gameOverCanvas.SetActive(true);
-        winCanvas.SetActive(false); // Al mostrar el canvas de game over, también ocultamos el canvas de la escena Win
-    }
-
-    public void ShowWinCanvas()
-    {
-        winCanvas.SetActive(true); // Mostramos el canvas de la escena Win
     }
 
     public void HideInicioCanvas()
@@ -112,8 +118,9 @@ public class CanvasManager : MonoBehaviour
         gameOverCanvas.SetActive(false);
     }
 
-    public void HideWinCanvas()
+    public void LoadScene(string sceneName)
     {
-        winCanvas.SetActive(false); // Ocultamos el canvas de la escena Win
+        SceneManager.LoadScene(sceneName);
     }
 }
+
