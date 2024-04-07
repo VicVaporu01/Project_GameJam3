@@ -143,6 +143,7 @@ private IEnumerator WaitForDeathAnimation()
         // Aument the scale of the player
         if (objectsAbsorbed % MaxAbsorb == 0 && objectsAbsorbed > 0)
         {
+            objectsAbsorbed=0;
             MaxAbsorb++;
             targetScale *= 2f;
             foodSlider.value = 0;
