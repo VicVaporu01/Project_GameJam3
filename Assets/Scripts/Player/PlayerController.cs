@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float health = 10f;
     [SerializeField] public bool Big= false;
     private float damage = 3.0f;
+    private int CountObjects=0;
 
     [SerializeField] private Slider healthSlider, foodSlider;
     [SerializeField] private int objectsAbsorbed = 0;
@@ -58,8 +59,16 @@ public class PlayerController : MonoBehaviour
         {
           //  Destroy(gameObject);
             isDead = true;
-            playerAnimator.SetBool("Death", true);
-            StartCoroutine(WaitForDeathAnimation());
+            playerAnimator.SetBool("Death", isDead);// la animacion entra una vez pero no termina despues de varias pruebas no se logro realizar 
+            Debug.Log("Game over");
+            
+        }
+        if (CountObjects>= 20) //Condicion de victoria !
+        {
+          
+            
+            Debug.Log("WIN");
+            
         }
 
         if (transform.localScale != targetScale)
@@ -67,14 +76,7 @@ public class PlayerController : MonoBehaviour
             transform.localScale = Vector3.Lerp(transform.localScale, targetScale, growthSpeed * Time.deltaTime);
         }
     }
-private IEnumerator WaitForDeathAnimation()
-    {
-        
-         yield return new WaitForSeconds(1f);
-
-        // Luego, pausa el tiempo del juego
-        Time.timeScale = 0f;
-    }
+     
 
     IEnumerator HasPain()
     {
@@ -143,6 +145,7 @@ private IEnumerator WaitForDeathAnimation()
         // Aument the scale of the player
         if (objectsAbsorbed % MaxAbsorb == 0 && objectsAbsorbed > 0)
         {
+            CountObjects+=objectsAbsorbed;
             objectsAbsorbed=0;
             MaxAbsorb++;
             targetScale *= 2f;
