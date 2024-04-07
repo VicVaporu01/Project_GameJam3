@@ -7,10 +7,10 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D playerRB;
+    [SerializeField] private GameObject playerCam, grownPlayerCam;
     [SerializeField] private AudioClip soundPowerup, soundCollision, SoundGrow;
 
-    [Header("PLAYER STATS")] 
-    private Vector3 targetScale;
+    [Header("PLAYER STATS")] private Vector3 targetScale;
     [SerializeField] private float speed = 5.0f, velocity;
     [SerializeField] private float health = 10f;
     [SerializeField] public bool Big = false;
@@ -19,11 +19,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Slider healthSlider, foodSlider;
     [SerializeField] private int objectsAbsorbed = 0;
     private bool hasPowerup;
-    private float growthSpeed = 2f;
+    private float growthSpeed = 7.0f;
     private int MaxAbsorb = 3;
 
-    [Header("ANIMACIONES")] 
-    private Animator playerAnimator;
+    [Header("ANIMACIONES")] private Animator playerAnimator;
     [SerializeField] private bool hasPain = false;
     [SerializeField] private bool isDead = false;
 
@@ -48,7 +47,7 @@ public class PlayerController : MonoBehaviour
         float moveHorizontal = Input.GetAxis("Horizontal");
         float moveVertical = Input.GetAxis("Vertical");
 
-        Vector2 movement = new Vector2(moveHorizontal, moveVertical);
+        Vector2 movement = new Vector2(moveHorizontal, moveVertical).normalized;
 
         playerAnimator.SetFloat("Velocity", Mathf.Abs(velocity));
 
@@ -144,6 +143,8 @@ public class PlayerController : MonoBehaviour
         // Aument the scale of the player
         if (objectsAbsorbed % MaxAbsorb == 0 && objectsAbsorbed > 0)
         {
+            playerCam.SetActive(false);
+            grownPlayerCam.SetActive(true);
             MaxAbsorb++;
             targetScale *= 2f;
             foodSlider.value = 0;
