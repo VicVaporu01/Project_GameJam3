@@ -77,8 +77,8 @@ public class SpawnManager : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             // Calcular la posición aleatoria dentro del rango definido
-            Vector3 spawnPosition = new Vector3(Random.Range(-65, 57),
-                Random.Range(-260, 210), 0f);
+            Vector3 spawnPosition = new Vector3(Random.Range(-4.5f, 50),
+                Random.Range(-125.5f, 93.9f), 0f);
 
             // Instanciar la comida en la posición calculada
             Instantiate(prefabFood, spawnPosition, Quaternion.identity);
