@@ -116,11 +116,11 @@ public class EnemyController : MonoBehaviour
         Vector3 direction = (player.transform.position - transform.position).normalized;
 
         // To see the raycast in the scene view
-        Ray2D rayToSee = new Ray2D(transform.position + direction * 7.0f, direction);
+        Ray2D rayToSee = new Ray2D(transform.position + direction * 5.0f, direction);
         Debug.DrawRay(rayToSee.origin, rayToSee.direction * 30.0f);
 
         // Raycast to detect the player
-        RaycastHit2D ray = Physics2D.Raycast(transform.position + direction * 7.0f,
+        RaycastHit2D ray = Physics2D.Raycast(transform.position + direction * 5.0f,
             player.transform.position - transform.position, 30.0f);
         if (ray.collider)
         {
