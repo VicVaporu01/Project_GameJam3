@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D playerRB;
+    private bool Bigest= true;
+
     [SerializeField] private GameObject playerCam, grownPlayerCam;
     [SerializeField] private AudioClip soundPowerup, soundCollision, SoundGrow;
 
@@ -69,9 +71,10 @@ public class PlayerController : MonoBehaviour
             
         }
 
-        if (transform.localScale != targetScale)
+        if (transform.localScale != targetScale && Bigest)
         {
             transform.localScale = Vector3.Lerp(transform.localScale, targetScale, growthSpeed * Time.deltaTime);
+            Bigest=false;
         }
     }
      
