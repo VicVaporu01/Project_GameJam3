@@ -274,6 +274,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabPowerup: {fileID: 2164745379522915585, guid: 3d5500dfaa3295d499fac39172388c91, type: 3}
+  prefabFood: {fileID: 9007216786864793188, guid: 0e494b5a1e2146845b7fa7b47300b97b, type: 3}
   enemyPool: {fileID: 20609712}
   powerupPool: {fileID: 1594664982}
 --- !u!4 &107346295
@@ -462,6 +463,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e494b5a1e2146845b7fa7b47300b97b, type: 3}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &490751755
 GameObject:
   m_ObjectHideFlags: 0
@@ -2084,8 +2087,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -4.6997, y: 0}
-  m_SizeDelta: {x: 0.6009, y: 0}
+  m_AnchoredPosition: {x: -1.1177979, y: 0}
+  m_SizeDelta: {x: 7.7645, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1978053696
 MonoBehaviour:
@@ -2366,7 +2369,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 10
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 10
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
