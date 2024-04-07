@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class EnemyController : MonoBehaviour
 {
@@ -12,25 +13,24 @@ public class EnemyController : MonoBehaviour
     private PlayerController playerScript;
 
     [SerializeField] private float movementSpeed = 3;
+    private Vector2 randomDirection;
 
     [SerializeField] private float health = 5.0f;
     [SerializeField] private bool hasLineOfSight = false;
-    [SerializeField] private float timeScared = 3.0f, timeScaping = 0;
-    
+    [SerializeField] private float timeScared = 3.0f, timeScaping = 0, timePatrolling = 5.0f;
+
     private bool isPushed = false;
-    private float pushDelay = 0.5f;
-    private float pushTimer = 0f;
-    
+    private float pushDelay = 0.5f, pushTimer = 0f;
+
     [Header("ANIMACIONES")] private Animator EnemyAnimator;
     [SerializeField] private bool hasPain = false;
+
     private void Start()
     {
         enemyRB = GetComponent<Rigidbody2D>();
         player = GameObject.Find("Player");
         EnemyAnimator = GetComponent<Animator>();
         playerScript = player.GetComponent<PlayerController>();
-        
-
     }
 
     private void Update()
@@ -44,7 +44,7 @@ public class EnemyController : MonoBehaviour
         {
             DesactivateEnemy();
         }
-        
+
         if (isPushed)
         {
             pushTimer += Time.deltaTime;
@@ -70,12 +70,12 @@ public class EnemyController : MonoBehaviour
             if (isBig)
             {
                 Escape();
-                EnemyAnimator.SetBool("IsBig",true);
+                EnemyAnimator.SetBool("IsBig", true);
             }
             else
             {
                 Follow();
-                EnemyAnimator.SetBool("IsBig",false);
+                EnemyAnimator.SetBool("IsBig", false);
             }
         }
 
@@ -83,6 +83,20 @@ public class EnemyController : MonoBehaviour
         if (!hasLineOfSight && timeScaping >= 0.0f)
         {
             timeScaping -= Time.deltaTime;
+        }
+
+        if (!hasLineOfSight && timeScaping <= 0.0f)
+        {
+            if (timePatrolling >= 0.0f)
+            {
+                timePatrolling -= Time.deltaTime;
+                enemyRB.velocity = randomDirection * movementSpeed;
+            }
+            else
+            {
+                RandomMovement();
+                timePatrolling = 5.0f;
+            }
         }
     }
 
@@ -126,9 +140,12 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    private void randomMovement()
+    private void RandomMovement()
     {
-        
+        float randomX = Random.Range(-10.0f, 10.0f);
+        float randomY = Random.Range(-10.0f, 10.0f);
+
+        randomDirection = new Vector2(randomX, randomY).normalized;
     }
 
     private void Escape()
@@ -137,7 +154,6 @@ public class EnemyController : MonoBehaviour
         if (hasLineOfSight || timeScaping >= 0.0f)
         {
             enemyRB.velocity = (transform.position - player.transform.position).normalized * movementSpeed;
-
         }
         else
         {

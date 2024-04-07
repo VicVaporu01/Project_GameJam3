@@ -49,11 +49,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isBig: 0
-  movementSpeed: 3
+  movementSpeed: 5
   health: 5
   hasLineOfSight: 0
   timeScared: 3
   timeScaping: 0
+  timePatrolling: 5
+  hasPain: 0
 --- !u!50 &3250250430029677073
 Rigidbody2D:
   serializedVersion: 4
