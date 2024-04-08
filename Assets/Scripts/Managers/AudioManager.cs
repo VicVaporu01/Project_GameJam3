@@ -5,7 +5,9 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
     [SerializeField] private AudioClip[] audioClips;
-    private AudioSource audioSource;
+    [SerializeField] private AudioClip[] musicClips;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioSource audioSourceMusic;
 
     private static AudioManager instance;
 
@@ -24,7 +26,7 @@ public class AudioManager : MonoBehaviour
         else
         {
             Instance = this;
-            audioSource = gameObject.AddComponent<AudioSource>();
+            DontDestroyOnLoad(this);
         }
     }
 
@@ -42,10 +44,15 @@ public class AudioManager : MonoBehaviour
         int randomIndex = Random.Range(0, audioClips.Length);
         PlayAudioClip(randomIndex);
     }
-    
-    public AudioSource GetAudioSource()
+
+    public void PlayBackGroundMusic(int musicID)
+    {
+        audioSourceMusic.clip = musicClips[musicID];
+        audioSourceMusic.Play();
+    }
+
+    public AudioSource GetAudioSourceSfx()
     {
         return audioSource;
     }
-    
 }

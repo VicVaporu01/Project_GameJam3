@@ -1,25 +1,51 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Button = UnityEngine.UIElements.Button;
 
 public class CanvasManager : MonoBehaviour
 {
     public GameObject inicioCanvas;
     public GameObject pauseCanvas;
+    [SerializeField] private GameObject tutorialImage;
+
     public GameObject gameOverCanvas;
-    public Text cigarrosText;
-    public Text vidaText;
+    //public Text cigarrosText;
+    //public Text vidaText;
 
     private int cigarrosRecogidos;
     private int vida;
 
-    void Start()
+    private static CanvasManager instance;
+
+    public static CanvasManager Instance
+    {
+        get => instance;
+        private set => instance = value;
+    }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+            DontDestroyOnLoad(this);
+        }
+    }
+
+    private void Start()
     {
         // Al iniciar el juego, mostrar el canvas de inicio y ocultar los demás
         ShowInicioCanvas();
-        HidePauseCanvas();
+        AudioManager.Instance.PlayBackGroundMusic(0);
+        // HidePauseCanvas();
         HideGameOverCanvas();
 
         // Inicializar valores
@@ -30,16 +56,16 @@ public class CanvasManager : MonoBehaviour
         UpdateVidaText();
     }
 
-    void UpdateCigarrosText()
+    private void UpdateCigarrosText()
     {
         // Actualizar el texto del contador de cigarros
-        cigarrosText.text = "Cigarros: " + cigarrosRecogidos;
+        //cigarrosText.text = "Cigarros: " + cigarrosRecogidos;
     }
 
-    void UpdateVidaText()
+    private void UpdateVidaText()
     {
         // Actualizar el texto del contador de vida
-        vidaText.text = "Vida: " + vida;
+        //vidaText.text = "Vida: " + vida;
     }
 
     public void AddCigarro()
@@ -76,16 +102,52 @@ public class CanvasManager : MonoBehaviour
         ShowGameOverCanvas();
     }
 
+    public void Play()
+    {
+        LoadScene("Level1");
+        AudioManager.Instance.PlayBackGroundMusic(1);
+        HideInicioCanvas();
+    }
+
+    public void Tutorial()
+    {
+        tutorialImage.SetActive(true);
+        HideInicioCanvas();
+    }
+
+    public void GoBack()
+    {
+        ShowInicioCanvas();
+        tutorialImage.SetActive(false);
+    }
+
     public void RestartGame()
     {
         // Reiniciar el juego cargando la escena actual
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
+    public void PauseGame()
+    {
+        Debug.Log("Game Paused");
+        // Pausar el juego
+        Time.timeScale = 0;
+        ShowPauseCanvas();
+        // ShowPauseCanvas();
+    }
+
+    public void ResumeGame()
+    {
+        Debug.Log("Game Resumed");
+        // Reanudar el juego
+        Time.timeScale = 1;
+        HidePauseCanvas();
+    }
+
     public void ShowInicioCanvas()
     {
         inicioCanvas.SetActive(true);
-        pauseCanvas.SetActive(false);
+        // pauseCanvas.SetActive(false);
         gameOverCanvas.SetActive(false);
     }
 
@@ -123,4 +185,3 @@ public class CanvasManager : MonoBehaviour
         SceneManager.LoadScene(sceneName);
     }
 }
-

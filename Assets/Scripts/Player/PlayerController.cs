@@ -89,7 +89,7 @@ public class PlayerController : MonoBehaviour
             speed *= GiveExtraSpeed();
             other.gameObject.SetActive(false);
             StartCoroutine(PowerupTimer());
-            AudioManager.Instance.GetAudioSource().PlayOneShot(soundPowerup, 1.0f);
+            AudioManager.Instance.GetAudioSourceSfx().PlayOneShot(soundPowerup, 1.0f);
         }
         else if (other.CompareTag("ObjectToAbsorb"))
         {
@@ -103,7 +103,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Enemy")) //
         {
-            AudioManager.Instance.GetAudioSource().PlayOneShot(soundCollision, 1.0f);
+            AudioManager.Instance.GetAudioSourceSfx().PlayOneShot(soundCollision, 1.0f);
             TakeDamage(1);
         }
     }
@@ -137,7 +137,7 @@ public class PlayerController : MonoBehaviour
 
     public void AbsorbObject()
     {
-        AudioManager.Instance.GetAudioSource().PlayOneShot(SoundGrow, 1.0f);
+        AudioManager.Instance.GetAudioSourceSfx().PlayOneShot(SoundGrow, 1.0f);
         objectsAbsorbed++;
         foodSlider.value = objectsAbsorbed;
         // Aument the scale of the player
