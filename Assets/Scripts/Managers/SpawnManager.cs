@@ -5,6 +5,7 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     public GameObject prefabPowerup; // Prefab del powerup a generar
+    public GameObject prefabFood;
     [SerializeField] private EnemyPool enemyPool;
     [SerializeField] private PowerupPool powerupPool;
 
@@ -24,6 +25,7 @@ public class SpawnManager : MonoBehaviour
 
         // Starts the continuous generation of powerups
         InvokeRepeating("SpawnPowerUp", 5.0f, 10.0f);
+        SpawnInitialFood(20);
     }
 
     // Genera un solo enemigo en una posición aleatoria
@@ -67,6 +69,19 @@ public class SpawnManager : MonoBehaviour
         else
         {
             Debug.Log("No powerup available.");
+        }
+        
+    }
+        private void SpawnInitialFood(int count)
+    {
+        for (int i = 0; i < count; i++)
+        {
+            // Calcular la posición aleatoria dentro del rango definido
+            Vector3 spawnPosition = new Vector3(Random.Range(-4.5f, 50),
+                Random.Range(-125.5f, 93.9f), 0f);
+
+            // Instanciar la comida en la posición calculada
+            Instantiate(prefabFood, spawnPosition, Quaternion.identity);
         }
     }
 }

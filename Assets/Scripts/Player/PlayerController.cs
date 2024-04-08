@@ -7,14 +7,18 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D playerRB;
+    private bool Bigest= true;
+
     [SerializeField] private GameObject playerCam, grownPlayerCam;
     [SerializeField] private AudioClip soundPowerup, soundCollision, SoundGrow;
 
-    [Header("PLAYER STATS")] private Vector3 targetScale;
+    [Header("PLAYER STATS")] 
+    private Vector3 targetScale;
     [SerializeField] private float speed = 5.0f, velocity;
     [SerializeField] private float health = 10f;
     [SerializeField] public bool Big = false;
     private float damage = 3.0f;
+    private int CountObjects=0;
 
     [SerializeField] private Slider healthSlider, foodSlider;
     [SerializeField] private int objectsAbsorbed = 0;
@@ -56,23 +60,25 @@ public class PlayerController : MonoBehaviour
         {
             //  Destroy(gameObject);
             isDead = true;
-            playerAnimator.SetBool("Death", true);
-            StartCoroutine(WaitForDeathAnimation());
+            playerAnimator.SetBool("Death", isDead);// la animacion entra una vez pero no termina despues de varias pruebas no se logro realizar 
+            Debug.Log("Game over");
+            
+        }
+        if (CountObjects>= 20) //Condicion de victoria !
+        {
+          
+            
+            Debug.Log("WIN");
+            
         }
 
-        if (transform.localScale != targetScale)
+        if (transform.localScale != targetScale && Bigest)
         {
             transform.localScale = Vector3.Lerp(transform.localScale, targetScale, growthSpeed * Time.deltaTime);
+            Bigest=false;
         }
     }
-
-    private IEnumerator WaitForDeathAnimation()
-    {
-        yield return new WaitForSeconds(1f);
-
-        // Luego, pausa el tiempo del juego
-        Time.timeScale = 0f;
-    }
+     
 
     private IEnumerator HasPain()
     {
@@ -145,6 +151,8 @@ public class PlayerController : MonoBehaviour
         {
             playerCam.SetActive(false);
             grownPlayerCam.SetActive(true);
+            CountObjects+=objectsAbsorbed;
+            objectsAbsorbed=0;
             MaxAbsorb++;
             targetScale *= 2f;
             foodSlider.value = 0;
