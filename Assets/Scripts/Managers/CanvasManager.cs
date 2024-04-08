@@ -130,7 +130,6 @@ public class CanvasManager : MonoBehaviour
 
     public void PauseGame()
     {
-        Debug.Log("Game Paused");
         // Pausar el juego
         Time.timeScale = 0;
         ShowPauseCanvas();
