@@ -8,6 +8,8 @@ public class PauseMenu : MonoBehaviour
 {
     [SerializeField] private Button pauseButton;
 
+    
+    
     public void PauseGame()
     {
         pauseButton.onClick.AddListener(CanvasManager.Instance.PauseGame);

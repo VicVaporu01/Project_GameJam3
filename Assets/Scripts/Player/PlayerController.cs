@@ -12,7 +12,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject playerCam, grownPlayerCam;
     [SerializeField] private AudioClip soundPowerup, soundCollision, SoundGrow;
 
-    [Header("PLAYER STATS")] private Vector3 targetScale;
+    [Header("PLAYER STATS")] 
+    private Vector3 targetScale;
     [SerializeField] private float speed = 5.0f, velocity;
     [SerializeField] private float health = 10f;
     [SerializeField] public bool Big = false;

@@ -105,6 +105,7 @@ public class CanvasManager : MonoBehaviour
     public void Play()
     {
         LoadScene("Level1");
+        Time.timeScale = 1;
         AudioManager.Instance.PlayBackGroundMusic(1);
         HideInicioCanvas();
     }
@@ -142,6 +143,14 @@ public class CanvasManager : MonoBehaviour
         // Reanudar el juego
         Time.timeScale = 1;
         HidePauseCanvas();
+    }
+
+    public void MainMenu()
+    {
+        HidePauseCanvas();
+        ShowInicioCanvas();
+        LoadScene("MainMenu");
+        AudioManager.Instance.PlayBackGroundMusic(0);
     }
 
     public void ShowInicioCanvas()
